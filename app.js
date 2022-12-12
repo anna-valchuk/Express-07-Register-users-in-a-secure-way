@@ -12,19 +12,26 @@ const welcome = (req, res) => {
 
 app.get("/", welcome);
 
+const { validateMovie } = require("./validators.js");
+
 const movieHandlers = require("./movieHandlers");
 
 app.get("/api/movies", movieHandlers.getMovies);
 app.get("/api/movies/:id", movieHandlers.getMovieById);
-app.post("/api/movies", movieHandlers.postMovie);
-app.put("/api/movies/:id", movieHandlers.updateMovie);
+app.put("/api/movies/:id", validateMovie, movieHandlers.postMovie);
+app.delete("/api/movies/:id", movieHandlers.deleteMovie);
+app.post("/api/movies", validateMovie, movieHandlers.postMovie);
 app.delete("/api/movies/:id", movieHandlers.deleteMovie);
 
+const { validateUser } = require("./validators.js");
+const { hashPassword } = require("./auth.js");
+
 const usersHandlers = require("./usersHandlers");
+
 app.get("/api/users", usersHandlers.getUsers);
 app.get("/api/users/:id", usersHandlers.getUsersById);
-app.post("/api/users", usersHandlers.postUsers);
-app.put("/api/users/:id", usersHandlers.updateUsers);
+app.post("/api/users", hashPassword, validateUser, usersHandlers.postUsers);
+app.put("/api/users/:id", validateUser, usersHandlers.updateUsers);
 app.delete("/api/users/:id", usersHandlers.deleteUsers);
 
 app.listen(port, (err) => {
