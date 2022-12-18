@@ -1,7 +1,7 @@
 const database = require("./database");
 
 const getUsers = (req, res) => {
-  let sql = "select id, firstname, lastname, email, city, language from users";
+  let sql = "select * from users";
   const sqlValues = [];
   if (req.query.language != null) {
     sql += " where language = ?";
@@ -98,6 +98,7 @@ const deleteUsers = (req, res) => {
       res.status(500).send("Error deleting user");
     });
 };
+
 module.exports = {
   getUsers,
   getUsersById,
